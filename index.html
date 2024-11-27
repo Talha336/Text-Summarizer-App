@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 text-white min-h-screen flex items-center justify-center transition-all duration-500">
+    <div class="w-full max-w-3xl p-8 bg-gray-800 rounded-xl shadow-xl">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-4xl font-extrabold text-blue-400 tracking-wide">
+                📝 Text Summarizer
+            </h1>
+        </div>
+
+        <p class="text-lg text-gray-300 mb-6">
+            Paste your lengthy Articles or Texts below to get a concise and accurate summary.
+        </p>
+
+        <!-- Input Section -->
+        <form id="summarizeForm" class="space-y-4">
+            <textarea id="inputText" name="text" rows="8"
+                      class="w-full p-4 bg-gray-700 text-white rounded-lg focus:ring-4 focus:ring-blue-500 resize-none transition-all dark:bg-gray-200 dark:text-black"
+                      placeholder="Paste your text here..."></textarea>
+
+            <button type="submit"
+                    class="w-full py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-lg font-semibold transition-all hover:scale-105">
+                Summarize
+            </button>
+        </form>
+
+        <!-- Output Section -->
+        <div id="output" class="mt-6 p-6 bg-gray-900 rounded-lg min-h-[100px] flex items-center justify-center text-white dark:bg-gray-200 dark:text-black text-lg">
+            <!-- Summary Output will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Handle form submission for text summarization
+        document.getElementById('summarizeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('inputText').value;
+            const output = document.getElementById('output');
+            output.innerHTML = `<p class="text-yellow-400 animate-pulse">Processing...</p>`;
+
+            try {
+                const response = await fetch('/summarize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ text: text })
+                });
+
+                const data = await response.json();
+                output.innerHTML = data.summary 
+                    ? `<p class="text-green-400 leading-relaxed">${data.summary}</p>` 
+                    : `<p class="text-red-500">${data.error}</p>`;
+            } catch (error) {
+                output.innerHTML = `<p class="text-red-500">Error: Could not connect to the server.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
