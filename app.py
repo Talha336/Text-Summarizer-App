@@ -17,7 +17,7 @@ def summarize():
 
     api_url = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
     headers = {
-        "Authorization": "Bearer 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",  # Correct API key format
+        "Authorization": "Bearer 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",  # Correct API key format
         "Content-Type": "application/json"
     }
 
